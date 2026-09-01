@@ -12,8 +12,12 @@ def process():
 
     url = data["url"]
     print(url)
-    result = scrapeSite(url)
-    return jsonify(result)
+    try:
+        result = scrapeSite(url)
+        return jsonify(result)
+    except Exception as e:
+        print("ERROR:", e)
+        raise
 
 
 def scrapeSite(url):
@@ -32,9 +36,9 @@ def scrapeSite(url):
     html = response.json()["parse"]["text"]["*"]
     soup = BeautifulSoup(html, "html.parser")
 
+    #Write to temp file
     with open("page.html", "w", encoding="utf-8") as f:
         f.write(html)
-
 
     #Issue Details
     print(page)
@@ -43,9 +47,13 @@ def scrapeSite(url):
     volume, issue = volIssue.split("_")
     print(title, volume, issue)
     returnJSON["issueURL"] = url
-    returnJSON["issueTitle"] = title
+    returnJSON["issueTitle"] = title.replace("_", " ")
     returnJSON["volume"] = volume
     returnJSON["issueNum"] = issue
+
+    #Dates
+    coverSidebar = soup.find("aside", class_="portable-infobox pi-background pi-border-color pi-theme-comic pi-layout-default")
+            
 
     
 
