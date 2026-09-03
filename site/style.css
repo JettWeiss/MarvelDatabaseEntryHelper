@@ -1,0 +1,30 @@
+.inputBox {
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 5px;
+}
+
+#issueDetailsBox {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+
+#storyBox {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+
+.story{
+    border: 1px solid black;
+    padding: 10px;
+    margin: 1px;
+    margin-bottom: 10px;
+}
+
+.titleByInput{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

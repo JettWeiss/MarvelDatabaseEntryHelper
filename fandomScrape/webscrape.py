@@ -11,7 +11,6 @@ def process():
     data = request.json
 
     url = data["url"]
-    print(url)
     try:
         result = scrapeSite(url)
         return jsonify(result)
@@ -36,10 +35,6 @@ def scrapeSite(url):
     html = response.json()["parse"]["text"]["*"]
     soup = BeautifulSoup(html, "html.parser")
 
-    #Write to temp file
-    with open("page.html", "w", encoding="utf-8") as f:
-        f.write(html)
-
     #Issue Details
     title, volume, issue = "Title not found", "Volume not found", "Issue not found"
     title, volIssue = page.split("_Vol_")
@@ -58,15 +53,11 @@ def scrapeSite(url):
     headers = coverSidebar.find_all('h3')
     for i in range(len(headers)): #TODO: Transform dates into SQL Format here?
         if(headers[i].text == "Release Date"):
-            print("Release Date")
             releaseDateDiv = headers[i].find_next("div")
-            print(releaseDateDiv.text)
             releaseDate = releaseDateDiv.text
 
         if(headers[i].text == "Cover Date"):
-            print("Cover Date")
             coverDateDiv = headers[i].find_next("div")
-            print(coverDateDiv.text)
             coverDate = coverDateDiv.text
 
     returnJSON["releaseDate"] = releaseDate
@@ -84,7 +75,7 @@ def scrapeSite(url):
 
         storyJSON["contributors"] = {}
         contributors = storiesHTMLList[i].find_next("section").find_all("h3")
-        print(len(contributors))
+        
         for j in range(len(contributors)):
             storyJSON["contributors"][contributors[j].text] = []
             contributorNames = contributors[j].find_next("div").find_all("a")
@@ -92,15 +83,55 @@ def scrapeSite(url):
                 contributorJSON = scrapeContributor(contributorNames[k]["href"])
                 storyJSON["contributors"][contributors[j].text].append(contributorJSON)
 
-        storyJSON["characters"] = []
         storiesList.append(storyJSON)
-        
-    for i in range(len(storiesList)):
-        print(storiesList[i])
-        print()
     returnJSON["stories"] = storiesList
 
 
+
+    #Characters
+    pointer = storiesSidebar.find_next_sibling("h2")
+    while(pointer):
+        if (pointer.name == "h2"): #New story?
+            currentStoryNum = -1
+            for i in range(len(returnJSON["stories"])):
+                
+                if (returnJSON["stories"][i]["title"] in pointer.text):
+                    if ("characters" not in returnJSON["stories"][i]):
+                        returnJSON["stories"][i]["characters"] = []
+                    currentStoryNum = i
+            if (currentStoryNum == -1): #Assumes that every h2 header will contain story title until end TODO: Potential fail point
+                break
+            pointer = pointer.find_next_sibling()
+            continue
+
+
+        if (pointer.name == "p"):
+            category = pointer.text
+            pointer = pointer.find_next_sibling()
+            continue
+
+        if (pointer.name == "ul"):
+            #Other categories may need to be added
+            if ("Character" not in category and "Antagonist" not in category):
+                pointer = pointer.find_next_sibling()
+                continue
+
+            charSublist = pointer.find_all("a")
+            for i in range(len(charSublist)):
+                characterJSON = {}
+                characterJSON["url"] = charSublist[i]["href"]
+                characterJSON["characterName"] = charSublist[i].text
+                scrapeCharacter("TEMP")
+                returnJSON["stories"][currentStoryNum]["characters"].append(characterJSON)
+                
+            pointer = pointer.find_next_sibling()
+            continue
+
+        #If none of the above
+        pointer = pointer.find_next_sibling() 
+
+            
+    print(returnJSON)
     return returnJSON
 
 

@@ -10,9 +10,30 @@
 
     <body>
         <script type="module" src="./index.js"></script>
+        <div id="SubmissionBox">
+            <h1>Enter URL to fill fields</h1>
+            <input type="text" id="fandomURLInput" placeholder="Fandom Wiki URL">
+            <button type="button" id="URLSubmitButton">Submit</button>
+            <button type="button" id="SQLSubmitButton">SQL Submit</button>
+            
+        </div>
         
-        <h1>URL</h1>
-        <input type="text" id="fandomURLInput" placeholder="Fandom Wiki URL">
-        <button id="URLSubmitButton">Submit</button>
+        <div id="issueDetailsBox">
+            <h1>Issue Details</h1>
+            <h2>Title:</h2>
+            <input class="inputBox" type="text" id="titleInput">
+            <h2>Volume</h2>
+            <input class="inputBox" type="text" id="volumeInput">
+            <h2>Issue Number</h2>
+            <input class="inputBox" type="text" id="issueNumInput">
+            <h2>Release Date</h2>
+            <input class="inputBox" type="text" id="releaseDateInput">
+            <h2>Cover Date</h2>
+            <input class="inputBox" type="text" id="coverDateInput">
+        </div>
+
+        <div id="storyBox">
+            
+        </div>
     </body>
 </html>
