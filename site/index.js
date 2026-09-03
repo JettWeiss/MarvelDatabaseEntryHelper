@@ -50,7 +50,6 @@ async function createHTML(data){
 }
 
 async function addStoryDiv(storyData, storyNum){
-    console.log(storyData.title);
     const parentDiv = document.getElementById("storyBox");
     const storyDiv = document.createElement("div");
     storyDiv.className = "story";
@@ -119,4 +118,6 @@ async function addStoryDiv(storyData, storyNum){
         name.className = "inputBox";
         characterNameDiv.appendChild(name);
     }
+
+    //TODO: Clear created divs when inputting a new field.
 }

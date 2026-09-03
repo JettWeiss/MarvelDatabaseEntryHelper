@@ -70,7 +70,7 @@ def scrapeSite(url):
     storiesHTMLList = storiesSidebar.find_all("h2")
     for i in range(len(storiesHTMLList)): #TODO: Maybe fix the triple nested loop
         storyJSON = {}
-        storyTitle = storiesHTMLList[i].text.split(". \"")[1][:-1] #Extracts the title from x. "___"
+        storyTitle = storiesHTMLList[i].text.split(". \"")[1][:-1] #Extracts the title from x. "___" #TODO: Fix for when theres no quotes
         storyJSON["title"] = storyTitle
 
         storyJSON["contributors"] = {}
